@@ -15,6 +15,11 @@ variable "server-host-name" {
   type        = string
 }
 
+variable "server-zone-location" {
+  description = "VM machine location"
+  type        = string
+}
+
 variable "core_fraction" {
   description = "Доля процессорного времени"
   type        = number

@@ -25,12 +25,3 @@ output "network_id" {
 output "network_name" {
   value = module.fsd-networks.network_name
 }
-
-output "subnet_id" {
-  value = module.fsd-networks.subnet_id
-}
-
-
-output "subnet_name" {
-  value = module.fsd-networks.subnet_name
-}

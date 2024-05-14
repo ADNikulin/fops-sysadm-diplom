@@ -16,6 +16,7 @@ provider "yandex" {
 resource "yandex_compute_instance" "server" {
   name        = "${var.server-app-name}-server"
   hostname    = var.server-host-name
+  zone        = var.server-zone-location
   platform_id = "standard-v3"
 
   # вычислительные мощности машины

@@ -18,3 +18,7 @@ output "server_name" {
 output "server_status" {
   value = yandex_compute_instance.server.status
 }
+
+output "server_subnet_id" {
+  value = var.servers_subnet_id
+}
