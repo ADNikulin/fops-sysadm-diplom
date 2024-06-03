@@ -82,81 +82,59 @@ resource "yandex_vpc_security_group" "sg_bastion-internal" {
   }
 }
 
-resource "yandex_compute_instance" "bastion" {
-  name = "bastion"
-  hostname = "bastion"
-  zone = var.location-zone_ru-central1-b
-  platform_id = "standard-v3"
-
-  resources {
-    cores = 2
-    core_fraction = 20
-    memory = 2
+resource "yandex_vpc_security_group" "sg_bastion-internal-a" {
+  name = "sg_bastion-internal-a"
+  network_id = yandex_vpc_network.fsd-internal-network.id
+  description = "Группа безопасности для внутреннего доступа"
+  
+  ingress {
+    port = 22
+    protocol = "TCP"
+    description = "Allow SSH from 172.16.16.254"
+    v4_cidr_blocks = ["172.16.16.254/32"]
   }
 
-  boot_disk {
-    initialize_params {
-      image_id = "fd8ecgtorub9r4609man"
-      size = 10
-    }
-  }
-
-  scheduling_policy {
-    preemptible = true
-  }
-
-  network_interface {
-    subnet_id = yandex_vpc_subnet.fsd-external-subnet.id
-    nat = true
-    security_group_ids = [yandex_vpc_security_group.sg_bastion-external.id]
-    ipv4 = true
-    nat_ip_address = "51.250.106.195"
-  }
-
-  network_interface {
-    subnet_id = yandex_vpc_subnet.fsd-internal-subnet-b.id
-    nat = false
-    security_group_ids = [yandex_vpc_security_group.sg_bastion-internal.id]
-    ipv4 = true
-    ip_address = "172.16.16.254"
-  }
-
-  metadata = {
-    user-data = "${file(var.path_to_metadata_user_ssh)}"
+  egress {
+    port = 22
+    protocol = "TCP"
+    description = "Allow SSH"
+    predefined_target = "self_security_group"
   }
 }
 
-resource "yandex_compute_instance" "testvm" {
-  name = "testvm"
-  hostname = "testvm"
-  zone = var.location-zone_ru-central1-b
-  platform_id = "standard-v3"
-
-  resources {
-    cores = 2
-    core_fraction = 20
-    memory = 2
-  }
-
-  boot_disk {
-    initialize_params {
-      image_id = "fd8ecgtorub9r4609man"
-      size = 10
-    }
-  }
-
-  scheduling_policy {
-    preemptible = true
-  }
-
-  network_interface {
-    subnet_id = yandex_vpc_subnet.fsd-internal-subnet-b.id
-    nat = false
-    security_group_ids = [yandex_vpc_security_group.sg_bastion-internal.id]
-    ipv4 = true
-  }
-
-  metadata = {
-    user-data = "${file(var.path_to_metadata_user_ssh)}"
-  }
+module "bastion-host" {
+  source = "../../modules/servers/bastion"
+  ipv4_internal-local = "172.16.16.254"
+  ipv4_external-nat = "51.250.106.195"
+  server-app-name = "bastion"
+  server-host-name = "bastion"
+  server-zone-location = var.location-zone_ru-central1-b
+  servers_subnet_external_id = yandex_vpc_subnet.fsd-external-subnet.id
+  servers_subnet_internal_id = yandex_vpc_subnet.fsd-internal-subnet-b.id
+  servers_security_external_group_id = yandex_vpc_security_group.sg_bastion-external.id
+  servers_security_internal_group_id = yandex_vpc_security_group.sg_bastion-internal.id
+  path_to_metadata_user_ssh = var.path_to_metadata_user_ssh
 }
+
+module "nginx-b" {
+  source = "../../modules/servers/nginx"
+  server-app-name = "nginx-b"
+  server-host-name = "nginx-b"
+  server-zone-location = var.location-zone_ru-central1-b
+  servers_subnet_internal_id = yandex_vpc_subnet.fsd-internal-subnet-b.id
+  servers_security_internal_group_id = yandex_vpc_security_group.sg_bastion-internal.id
+  ipv4_internal-local = "172.16.16.10"
+  path_to_metadata_user_ssh = var.path_to_metadata_user_ssh
+}
+
+module "nginx-a" {
+  source = "../../modules/servers/nginx"
+  server-app-name = "nginx-a"
+  server-host-name = "nginx-a"
+  server-zone-location = var.location-zone_ru-central1-a
+  servers_subnet_internal_id = yandex_vpc_subnet.fsd-internal-subnet-a.id
+  servers_security_internal_group_id = yandex_vpc_security_group.sg_bastion-internal.id
+  ipv4_internal-local = "172.16.15.10"
+  path_to_metadata_user_ssh = var.path_to_metadata_user_ssh
+}
+

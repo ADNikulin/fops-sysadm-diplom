@@ -26,8 +26,40 @@ variable "core_fraction" {
   default     = 20
 }
 
-variable "servers_subnet_id" {
-  description = "Subnet ID"
+variable "servers_subnet_internal_id" {
+  description = "servers_subnet_internal_id"
+  type        = string
+}
+
+variable "servers_subnet_external_id" {
+  description = "servers_subnet_external_id"
+  type        = string
+}
+
+variable "ipv4_external-nat" {
+  description = "ipv4_external-nat"
+  type        = string
+}
+
+variable "ipv4_external-local" {
+  description = "ipv4_external-local"
+  type        = string
+  nullable    = true
+  default     = null
+}
+
+variable "ipv4_internal-local" {
+  description = "ipv4_internal-local"
+  type        = string
+}
+
+variable "servers_security_internal_group_id" {
+  description = "servers_security_internal_group_id"
+  type        = string
+}
+
+variable "servers_security_external_group_id" {
+  description = "servers_security_external_group_id"
   type        = string
 }
 
