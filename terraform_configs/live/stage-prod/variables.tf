@@ -17,32 +17,15 @@ variable "location-zone_ru-central1-a" {
   type        = string
 }
 
-variable "network-name" {
-  description = "Network name"
-  type        = string
-}
-
-variable "subnet-a-name" {
-  description = "Subnet-a name"
-  type        = string
-}
-
-variable "subnet-b-name" {
-  description = "Subnet-b name"
-  type        = string
-}
-
-variable "v4_cidr_blocks-a" {
-  description = "pool of ipv4 addresses, e.g "
-  type        = string
-}
-
-variable "v4_cidr_blocks-b" {
-  description = "pool of ipv4 addresses, e.g "
-  type        = string
-}
-
 variable "path_to_metadata_user_ssh" {
   description = "Path to Users Metadata access by ssh"
   type        = string
+}
+
+variable "internal_ip_blocks-a" {
+  type = string
+}
+
+variable "internal_ip_blocks-b" {
+  type = string
 }

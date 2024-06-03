@@ -18,6 +18,7 @@ resource "yandex_compute_instance" "server" {
   hostname    = var.server-host-name
   zone        = var.server-zone-location
   platform_id = "standard-v3"
+  
 
   # вычислительные мощности машины
   resources {

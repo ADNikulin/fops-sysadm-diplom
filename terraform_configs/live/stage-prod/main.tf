@@ -12,143 +12,151 @@ provider "yandex" {
   zone = var.zone
 }
 
-module "fsd-networks" {
-  source       = "./../../modules/networks/network"
-  zone         = var.zone
-  network-name = var.network-name
+#----- Настройка сети и подсети
+#   -- Внутрення сеть
+resource "yandex_vpc_network" "fsd-internal-network" {
+  name = "fsd-internal-network"
+  description = "Внутрення сеть"
 }
 
-module "fsd-subnet-a" {
-  source         = "../../modules/networks/subnet"
-  network_id     = module.fsd-networks.network_id
-  v4_cidr_blocks = var.v4_cidr_blocks-a
-  subnet-name    = var.subnet-a-name
-  zone           = var.location-zone_ru-central1-a
+#   -- Внешняя сеть
+resource "yandex_vpc_network" "fsd-external-network" {
+  name = "fsd-external-network"
+  description = "Внешняя сеть"
 }
 
-module "fsd-subnet-b" {
-  source         = "../../modules/networks/subnet"
-  network_id     = module.fsd-networks.network_id
-  v4_cidr_blocks = var.v4_cidr_blocks-b
-  subnet-name    = var.subnet-b-name
-  zone           = var.location-zone_ru-central1-b
+resource "yandex_vpc_subnet" "fsd-internal-subnet-a" {
+  name = "fsd-internal-subnet-a"
+  v4_cidr_blocks = ["172.16.15.0/24"]
+  zone = var.location-zone_ru-central1-a
+  network_id = yandex_vpc_network.fsd-internal-network.id
+  description = "Внутрення подсеть которая находится в зоне А"
 }
 
-#--- begin: setup nginx servers
-module "nginx-server-1" {
-  source                    = "./../../modules/servers"
-  core_fraction             = 20
-  server-app-name           = "nginx-master"
-  server-host-name          = "nginx-master"
-  servers_subnet_id         = module.fsd-subnet-a.subnet_id
-  path_to_metadata_user_ssh = var.path_to_metadata_user_ssh
-  server-zone-location      = var.location-zone_ru-central1-a
+resource "yandex_vpc_subnet" "fsd-internal-subnet-b" {
+  name = "fsd-internal-subnet-b"
+  v4_cidr_blocks = ["172.16.16.0/24"]
+  zone = var.location-zone_ru-central1-b
+  network_id = yandex_vpc_network.fsd-internal-network.id
+  description = "Внутрення подсеть которая находится в зоне Б"
 }
 
-module "nginx-server-2" {
-  source                    = "./../../modules/servers"
-  core_fraction             = 20
-  server-app-name           = "nginx-slave"
-  server-host-name          = "nginx-slave"
-  servers_subnet_id         = module.fsd-subnet-b.subnet_id
-  path_to_metadata_user_ssh = var.path_to_metadata_user_ssh
-  server-zone-location      = var.location-zone_ru-central1-b
+resource "yandex_vpc_subnet" "fsd-external-subnet" {
+  name = "fsd-external-subnet"
+  zone = var.location-zone_ru-central1-b
+  v4_cidr_blocks = ["172.16.17.0/28"]
+  network_id = yandex_vpc_network.fsd-external-network.id
+  description = "Внешняя подсеть находящаяся в зоне Б"
 }
-#--- end: setup nginx servers
 
-#--- begin: settup target group
-resource "yandex_alb_target_group" "nginx-target-group" {
-  name = "nginx-target-group"
-
-  target {
-    ip_address = module.nginx-server-1.internal_ip_address_server
-    subnet_id  = module.nginx-server-1.server_subnet_id
-  }
-
-  target {
-    ip_address = module.nginx-server-2.internal_ip_address_server
-    subnet_id  = module.nginx-server-2.server_subnet_id
-  }
-}
-#--- end: settup target group
-
-#--- Begin: settup Backend -----
-resource "yandex_alb_backend_group" "backend-group" {
-  name = "backend-group"
-
-  http_backend {
-    name             = "backend"
-    weight           = 1
-    port             = 80
-    target_group_ids = [yandex_alb_target_group.nginx-target-group.id]
-    load_balancing_config {
-      panic_threshold = 90
-    }
-    healthcheck {
-      timeout             = "10s"
-      interval            = "2s"
-      healthy_threshold   = 10
-      unhealthy_threshold = 15
-      http_healthcheck {
-        path = "/"
-      }
-    }
-  }
-}
-#--- end: settup Backend -----
-
-#--- begin: HTTP router -----
-resource "yandex_alb_http_router" "http-router" {
-  name          = "http-router"
-  labels        = {
-    tf-label    = "tf-label-value"
-    empty-label = ""
+resource "yandex_vpc_security_group" "sg_bastion-external" {
+  name = "sg_bastion-external"
+  network_id = yandex_vpc_network.fsd-external-network.id
+  description = "Группа безопасности для внешнего доступа"
+  
+  ingress {
+    port = 22
+    protocol = "TCP"
+    description = "Allow SSH"
+    v4_cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
-resource "yandex_alb_virtual_host" "nginx-virtual-host" {
-  name                    = "nginx-virtual-host"
-  http_router_id          = yandex_alb_http_router.http-router.id
-  route {
-    name                  = "nginx-way"
-    http_route {
-      http_route_action {
-        backend_group_id  = yandex_alb_backend_group.backend-group.id
-        timeout           = "60s"
-      }
-    }
+resource "yandex_vpc_security_group" "sg_bastion-internal" {
+  name = "sg_bastion-internal"
+  network_id = yandex_vpc_network.fsd-internal-network.id
+  description = "Группа безопасности для внутреннего доступа"
+  
+  ingress {
+    port = 22
+    protocol = "TCP"
+    description = "Allow SSH from 172.16.16.254"
+    v4_cidr_blocks = ["172.16.16.254/32"]
   }
-}    
-#--- end: HTTP router -----
 
-#--- begin: L-7 Balance -----
-resource "yandex_alb_load_balancer" "nginx-balancer" {
-  name        = "nginx-balancer"
-  network_id  = module.fsd-networks.network_id
-  security_group_ids = [yandex_vpc_security_group.balance.id]
+  egress {
+    port = 22
+    protocol = "TCP"
+    description = "Allow SSH"
+    predefined_target = "self_security_group"
+  }
+}
 
-  allocation_policy {
-    location {
-      zone_id   = var.location-zone_ru-central1-a
-      subnet_id = module.fsd-subnet-a.subnet_id
+resource "yandex_compute_instance" "bastion" {
+  name = "bastion"
+  hostname = "bastion"
+  zone = var.location-zone_ru-central1-b
+  platform_id = "standard-v3"
+
+  resources {
+    cores = 2
+    core_fraction = 20
+    memory = 2
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd8ecgtorub9r4609man"
+      size = 10
     }
   }
 
-  listener {
-    name = "listener"
-    endpoint {
-      address {
-        external_ipv4_address {
-        }
-      }
-      ports = [ 80 ]
-    }
-    http {
-      handler {
-        http_router_id = yandex_alb_http_router.http-router.id
-      }
-    }
+  scheduling_policy {
+    preemptible = true
+  }
+
+  network_interface {
+    subnet_id = yandex_vpc_subnet.fsd-external-subnet.id
+    nat = true
+    security_group_ids = [yandex_vpc_security_group.sg_bastion-external.id]
+    ipv4 = true
+    nat_ip_address = "51.250.106.195"
+  }
+
+  network_interface {
+    subnet_id = yandex_vpc_subnet.fsd-internal-subnet-b.id
+    nat = false
+    security_group_ids = [yandex_vpc_security_group.sg_bastion-internal.id]
+    ipv4 = true
+    ip_address = "172.16.16.254"
+  }
+
+  metadata = {
+    user-data = "${file(var.path_to_metadata_user_ssh)}"
   }
 }
 
-#--- end: L-7 Balance -----
+resource "yandex_compute_instance" "testvm" {
+  name = "testvm"
+  hostname = "testvm"
+  zone = var.location-zone_ru-central1-b
+  platform_id = "standard-v3"
+
+  resources {
+    cores = 2
+    core_fraction = 20
+    memory = 2
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd8ecgtorub9r4609man"
+      size = 10
+    }
+  }
+
+  scheduling_policy {
+    preemptible = true
+  }
+
+  network_interface {
+    subnet_id = yandex_vpc_subnet.fsd-internal-subnet-b.id
+    nat = false
+    security_group_ids = [yandex_vpc_security_group.sg_bastion-internal.id]
+    ipv4 = true
+  }
+
+  metadata = {
+    user-data = "${file(var.path_to_metadata_user_ssh)}"
+  }
+}
