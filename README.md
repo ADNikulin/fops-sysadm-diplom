@@ -11,7 +11,7 @@
 yc config set service-account-key key.json
 yc config set cloud-id <идентификатор_облака>
 yc config set folder-id <идентификатор_каталога>
-```bash
+```
 
 Для авторизации используем: 
 ```bash
