@@ -12,38 +12,64 @@ provider "yandex" {
   zone = var.zone
 }
 
-resource "yandex_compute_instance" "nginx" {
-  name        = var.server-app-name
-  hostname    = var.server-host-name
-  zone        = var.server-zone-location
-  platform_id = "standard-v3"
+data "yandex_compute_image" "webserver" {
+  family = "lemp"
+}
 
-  resources {
-    cores         = 2
-    core_fraction = var.core_fraction
-    memory        = 2
-  }
+resource "yandex_compute_instance_group" "nginx" {
+  name                = var.server-app-name
+  deletion_protection = false
+  service_account_id  = var.service_account_id
 
-  boot_disk {
-    initialize_params {
-      image_id = "fd8ecgtorub9r4609man"
-      size     = 10
+  instance_template {
+    platform_id = "standard-v3"
+    name        = "{var.server-host-name} {instance.short_id}"
+    hostname    = "{var.server-host-name} {instance.short_id}"
+
+    resources {
+      cores         = 2
+      core_fraction = var.core_fraction
+      memory        = 1
+    }
+
+    boot_disk {
+      initialize_params {
+        image_id = data.yandex_compute_image.webserver.image_id
+        size     = 20
+        type     = "network-hdd"
+      }
+    }
+
+    scheduling_policy {
+      preemptible = true
+    }
+
+    network_interface {
+      nat                = false
+      security_group_ids = [var.servers_security_internal_group_id]
+      ipv4               = true
+      ipv6               = false
+    }
+
+    metadata = {
+      user-data = "${file(var.path_to_metadata_user_ssh)}"
     }
   }
 
-  scheduling_policy {
-    preemptible = true
+  scale_policy {
+    fixed_scale {
+      size = 2
+    }
   }
 
-  network_interface {
-    subnet_id          = var.servers_subnet_internal_id
-    nat                = false
-    security_group_ids = [var.servers_security_internal_group_id]
-    ipv4               = true
-    ip_address         = var.ipv4_internal-local
+  allocation_policy {
+    zones = ["ru-central1-a", "ru-central1-b"]
   }
 
-  metadata = {
-    user-data = "${file(var.path_to_metadata_user_ssh)}"
+  deploy_policy {
+    max_unavailable = 1
+    max_expansion   = 1
+    max_deleting    = 1
+    max_creating    = 3
   }
 }

@@ -22,10 +22,30 @@ variable "path_to_metadata_user_ssh" {
   type        = string
 }
 
-variable "internal_ip_blocks-a" {
+variable "internal_ips_bastion" {
   type = string
 }
 
-variable "internal_ip_blocks-b" {
+variable "internal_ips_zone_a" {
   type = string
+}
+
+variable "internal_ips_zone_b" {
+  type = string
+}
+
+variable "service_account_id" {
+  type        = string
+  description = "service_account_id"
+}
+
+variable "external_ip_bastion" {
+  type        = string
+  description = "service_account_id"
+}
+
+variable "preemptible" {
+  type        = bool
+  description = "preemptible VM"
+  default     = false
 }

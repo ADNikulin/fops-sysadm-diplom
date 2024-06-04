@@ -1,6 +1,6 @@
 # Список выходных значений модуля
 output "internal_ip_address_server" {
-  value = yandex_compute_instance.nginx.network_interface.0.ip_address
+  value = yandex_compute_instance.instance.network_interface.0.ip_address
 }
 
 # output "external_ip_address_server" {
@@ -8,17 +8,17 @@ output "internal_ip_address_server" {
 # }
 
 output "server_id" {
-  value = yandex_compute_instance.nginx.id
+  value = yandex_compute_instance.instance.id
 }
 
 output "server_subnet_id" {
-  value = ""
+  value = var.servers_subnet_id
 }
 
 output "server_name" {
-  value = yandex_compute_instance.nginx.name
+  value = yandex_compute_instance.instance.name
 }
 
 output "server_status" {
-  value = yandex_compute_instance.nginx.status
+  value = yandex_compute_instance.instance.status
 }

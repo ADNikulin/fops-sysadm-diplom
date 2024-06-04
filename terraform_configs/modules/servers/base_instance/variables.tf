@@ -26,22 +26,22 @@ variable "core_fraction" {
   default     = 20
 }
 
-variable "servers_subnet_internal_ids" {
-  description = "servers_subnet_internal_id"
-  type        = list(string)
+variable "servers_subnet_id" {
+  description = "servers_subnet_id"
+  type        = string
 }
 
-variable "servers_security_internal_group_id" {
+variable "ipv4_internal" {
+  description = "ipv4_internal"
+  type        = string
+}
+
+variable "sg_group_id" {
   description = "servers_security_internal_group_id"
   type        = string
 }
 
 variable "path_to_metadata_user_ssh" {
   description = "Path to Users Metadata access by ssh"
-  type        = string
-}
-
-variable "service_account_id" {
-  description = "service_account_id"
   type        = string
 }
