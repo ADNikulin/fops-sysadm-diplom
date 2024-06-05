@@ -1,0 +1,69 @@
+- name: Test connection to hosts
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: PING - Test connection
+      ansible.builtin.ping:
+
+- name: Setup html template on webservers
+  hosts:
+    - webservers
+  roles:
+    - site
+
+- name: Setup docker engine and python plugins for docker compose
+  hosts:
+    - observability
+  roles:
+    - docker-host
+
+- name: Elasticsearch setup
+  hosts: elastic
+  roles:
+    - elasticsearch
+
+- name: Kibana setup
+  hosts: kibana
+  roles:
+    - kibana
+
+- name: Configure Nginx Log Exporter on webservers
+  hosts: webservers
+  roles:
+    - nginx-log-exporter
+
+- name: Configure Node Exporter on each server
+  hosts:
+    - webservers
+    - observability
+  serial: 7
+  roles:
+    - node-exporter
+
+- name: Prometheus setup
+  hosts: prometheus
+  roles:
+    - pg-prom-adapter
+    - alertmanager
+    - prometheus
+
+- name: Grafana setup
+  hosts: grafana
+  roles:
+    - grafana
+
+- name: Configure filebeats for nginx
+  hosts:
+    - webservers
+  roles:
+    - filebeat
+  vars:
+    mode: nginx
+
+- name: Configure filebeats for containers
+  hosts:
+    - observability
+  roles:
+    - filebeat
+  vars:
+    mode: docker

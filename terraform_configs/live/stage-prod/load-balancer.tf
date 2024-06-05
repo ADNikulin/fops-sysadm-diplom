@@ -59,6 +59,11 @@ resource "yandex_alb_load_balancer" "lb-fsd_netology" {
       zone_id   = var.location-zone_ru-central1-b
       subnet_id = yandex_vpc_subnet.fsd-internal-subnet-b.id
     }
+
+    location {
+      zone_id   = var.location-zone_ru-central1-d
+      subnet_id = yandex_vpc_subnet.fsd-internal-subnet-d.id
+    }
   }
 
   listener {
@@ -76,9 +81,6 @@ resource "yandex_alb_load_balancer" "lb-fsd_netology" {
         http_router_id = yandex_alb_http_router.http_router-fsd_netology.id
       }
     }
-  }
-  log_options {
-    disable = true
   }
   depends_on = [ 
     yandex_vpc_security_group_rule.sg-rule-load_balancer-healthchecks,

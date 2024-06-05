@@ -1,10 +1,10 @@
 #------------------------ prometheus --------------------------
 resource "yandex_compute_instance" "prometheus" {
-  name               = "prometheus"
-  hostname           = "prometheus"
+  name               = "prometheus-host"
+  hostname           = "prometheus-host"
   zone               = var.location-zone_ru-central1-b
   service_account_id = var.service_account_id
-  description        = "prometheus"
+  description        = "prometheus-host"
   platform_id        = "standard-v3"
 
   resources {

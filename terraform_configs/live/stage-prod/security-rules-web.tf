@@ -4,5 +4,5 @@ resource "yandex_vpc_security_group_rule" "sg-rule-webservers-http" {
   description            = "allow port 80 "
   port                   = 80
   protocol               = "TCP"
-  v4_cidr_blocks         = ["172.16.15.0/24", "172.16.16.0/24"]
+  v4_cidr_blocks         = ["172.16.15.0/24", "172.16.16.0/24", "172.16.20.0/24"]
 }

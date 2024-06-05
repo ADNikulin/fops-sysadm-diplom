@@ -11,6 +11,12 @@ resource "yandex_vpc_security_group" "sg-bastion-external" {
   description = "Группа безопасности для внешнего доступа"
 }
 
+#--------- postgres ------------------
+resource "yandex_vpc_security_group" "sg-postgres" {
+  name       = "sg-postgres"
+  network_id = yandex_vpc_network.fsd-network.id
+}
+
 #--------- WEB ------------------
 resource "yandex_vpc_security_group" "sg-webservers" {
   name        = "sg-webservers"

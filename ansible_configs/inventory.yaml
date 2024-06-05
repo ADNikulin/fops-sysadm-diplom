@@ -1,0 +1,34 @@
+all:
+  children:
+    jump:
+      hosts:
+        bastion-host:
+          ansible_host: 51.250.31.223
+      vars:
+        ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+        ansible_host_key_checking: false
+
+    webservers:
+      hosts:
+        nginx-onex-webserver-host:
+          ansible_host: 172.16.15.4
+        nginx-yleg-webserver-host:
+          ansible_host: 172.16.16.18
+        nginx-efof-webserver-host:
+          ansible_host: 172.16.20.14
+
+    observability:
+      hosts:
+        prometheus-host:
+          ansible_host: 172.16.18.23
+        grafana-host:
+          ansible_host: 172.16.17.9
+        elastic-host:
+          ansible_host: 172.16.18.20
+        kibana-host:
+          ansible_host: 172.16.17.27
+  vars:
+    ansible_ssh_common_args: '-J user@51.250.31.223 -o StrictHostKeyChecking=no'
+    ansible_host_key_checking: false
+    ansible_user: ansible
+    ansible_become: true

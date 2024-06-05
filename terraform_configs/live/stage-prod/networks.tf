@@ -29,6 +29,14 @@ resource "yandex_vpc_subnet" "fsd-internal-subnet-b" {
   description    = "Внутрення подсеть которая находится в зоне Б"
 }
 
+resource "yandex_vpc_subnet" "fsd-internal-subnet-d" {
+  name           = "fsd-internal-subnet-d"
+  v4_cidr_blocks = ["172.16.20.0/24"]
+  zone           = var.location-zone_ru-central1-d
+  network_id     = yandex_vpc_network.fsd-network.id
+  description    = "Внутрення подсеть которая находится в зоне D"
+}
+
 resource "yandex_vpc_subnet" "fsd-external-subnet" {
   name           = "fsd-external-subnet"
   zone           = var.location-zone_ru-central1-b

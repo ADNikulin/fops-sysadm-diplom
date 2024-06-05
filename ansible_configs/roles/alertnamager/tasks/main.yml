@@ -1,0 +1,24 @@
+---
+# tasks file for alertmanager
+- name: ALERTMANAGER - create workdir
+  ansible.builtin.file:
+    path: '{{ item.path }}'
+    state: directory
+    mode: '0755'
+  loop:
+    - { path: "{{ ansible_workdir }}/alertmanager" }
+
+- name: ALERTMANAGER - Replace config
+  ansible.builtin.template:
+    src: alertmanager.yml.j2
+    dest: "{{ ansible_workdir }}/alertmanager/alertmanager.yml"
+
+- name: ALERTMANAGER - start container
+  community.docker.docker_container:
+    name: alertmanager
+    image: prom/alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - "{{ ansible_workdir }}/alertmanager:/config"
+    command: "--config.file=/config/alertmanager.yml --log.level=debug"

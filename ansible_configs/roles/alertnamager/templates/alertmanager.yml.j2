@@ -1,0 +1,31 @@
+global:
+
+route:
+  receiver: 'nedorezov'
+
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 3h
+
+#   routes:
+#   # This routes performs a regular expression match on alert labels to
+#   # catch alerts that are related to a list of services.
+#   - match_re:
+#       service: ^(netology)$
+#     receiver: nedorezov
+
+inhibit_rules:
+- source_matchers:
+    - severity="critical"
+  target_matchers:
+    - severity="warning"
+  equal: ['alertname']
+
+receivers:
+- name: 'nedorezov'
+  telegram_configs:
+  - bot_token: {{ telegram_bot_token }}
+    api_url: https://api.telegram.org
+    chat_id: {{ telegram_chat_id }}
+    parse_mode: ""

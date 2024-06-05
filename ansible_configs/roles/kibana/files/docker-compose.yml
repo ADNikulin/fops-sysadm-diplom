@@ -1,0 +1,16 @@
+version: '3'
+services:
+  kibana:
+    image: kibana:8.7.0
+    container_name: kibana
+    environment:
+      SERVER_NAME: kibana-coursework-nedorezov
+      ELASTICSEARCH_HOSTS: '["http://elastic:9200"]'
+    ports:
+      - "5601:5601"
+    networks:
+      - kibana
+
+networks:
+  kibana:
+    driver: bridge

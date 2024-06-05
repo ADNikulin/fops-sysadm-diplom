@@ -10,8 +10,8 @@ resource "yandex_compute_instance_group" "webservers" {
 
   instance_template {
     platform_id        = "standard-v3"
-    name               = "nginx-{instance.short_id}"
-    hostname           = "nginx-{instance.short_id}"
+    name               = "nginx-{instance.short_id}-webserver-host"
+    hostname           = "nginx-{instance.short_id}-webserver-host"
     service_account_id = var.service_account_id
 
     resources {
@@ -33,12 +33,19 @@ resource "yandex_compute_instance_group" "webservers" {
     }
 
     network_interface {
-      nat                = false
-      network_id         = yandex_vpc_network.fsd-network.id
-      subnet_ids         = [yandex_vpc_subnet.fsd-internal-subnet-a.id, yandex_vpc_subnet.fsd-internal-subnet-b.id]
-      security_group_ids = [yandex_vpc_security_group.sg-webservers.id, yandex_vpc_security_group.sg-ssh-internal.id]
-      ipv4               = true
-      ipv6               = false
+      nat        = false
+      network_id = yandex_vpc_network.fsd-network.id
+      subnet_ids = [
+        yandex_vpc_subnet.fsd-internal-subnet-a.id,
+        yandex_vpc_subnet.fsd-internal-subnet-b.id,
+        yandex_vpc_subnet.fsd-internal-subnet-d.id
+      ]
+      security_group_ids = [
+        yandex_vpc_security_group.sg-webservers.id,
+        yandex_vpc_security_group.sg-ssh-internal.id
+      ]
+      ipv4 = true
+      ipv6 = false
     }
 
     metadata = {
@@ -48,12 +55,12 @@ resource "yandex_compute_instance_group" "webservers" {
 
   scale_policy {
     fixed_scale {
-      size = 2
+      size = 3
     }
   }
 
   allocation_policy {
-    zones = [var.location-zone_ru-central1-a, var.location-zone_ru-central1-b]
+    zones = [var.location-zone_ru-central1-a, var.location-zone_ru-central1-b, var.location-zone_ru-central1-d]
   }
 
   deploy_policy {
