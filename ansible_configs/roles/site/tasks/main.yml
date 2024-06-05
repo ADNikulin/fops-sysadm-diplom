@@ -2,7 +2,7 @@
   ansible.builtin.file:
     path: /var/www/site
     state: directory
-    owner: ansible
+    owner: user
     group: root
     mode: '0755'
 

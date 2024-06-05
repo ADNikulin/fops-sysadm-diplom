@@ -28,5 +28,5 @@ all:
   vars:
     ansible_ssh_common_args: '-J user@${bastion.ip} -o StrictHostKeyChecking=no'
     ansible_host_key_checking: false
-    ansible_user: ansible
+    ansible_user: user
     ansible_become: true
