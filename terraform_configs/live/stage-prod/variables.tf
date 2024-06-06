@@ -63,3 +63,9 @@ variable "pg_admin_password" {
   type = string
   description = "pg_admin_password"
 }
+
+variable "nat_for_private" {
+  type = bool
+  description = "nat for private hosts by configure "
+  default = false
+}

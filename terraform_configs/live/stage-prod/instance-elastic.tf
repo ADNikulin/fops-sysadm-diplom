@@ -28,6 +28,8 @@ resource "yandex_compute_instance" "elastic" {
   network_interface {
     subnet_id          = yandex_vpc_subnet.fsd-observability-subnet.id
     security_group_ids = [yandex_vpc_security_group.sg-elastic.id, yandex_vpc_security_group.sg-ssh-internal.id]
+    # delete
+    nat = var.nat_for_private
   }
 
   metadata = {

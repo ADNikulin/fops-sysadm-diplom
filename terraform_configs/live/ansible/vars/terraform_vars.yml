@@ -1,7 +1,8 @@
 webserver_node_1: nginx-onex-webserver-host
 webserver_node_2: nginx-yleg-webserver-host
+webserver_node_3: nginx-efof-webserver-host
 kibana_password: TeSt123!
-ansible_workdir: /home/anikulin/fops-sysadm-diplom/ansible_configs
+ansible_workdir: /home/user
 telegram_bot_token: 
 telegram_chat_id: ""
 pg_cluster_id: c9qaml4ahhqhijed211p

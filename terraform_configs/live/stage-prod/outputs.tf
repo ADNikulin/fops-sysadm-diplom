@@ -4,7 +4,6 @@ output "external_ip_address_app" {
 
 output "bastion_external_ips" {
   description = "Public IP address of load bastion."
-  #    value = yandex_compute_instance_group.cw-netology.instances.*.network_interface.0.nat_ip_address
   value = yandex_compute_instance.bastion.network_interface.0.nat_ip_address
 }
 
@@ -37,6 +36,7 @@ resource "local_file" "tf_ansible_vars_file" {
   content = <<-DOC
     webserver_node_1: ${yandex_compute_instance_group.webservers.instances.0.name}
     webserver_node_2: ${yandex_compute_instance_group.webservers.instances.1.name}
+    webserver_node_3: ${yandex_compute_instance_group.webservers.instances.2.name}
     kibana_password: ${var.kibana_password}
     ansible_workdir: ${var.ansible_workdir}
     telegram_bot_token: ${var.telegram_bot_token}

@@ -33,7 +33,8 @@ resource "yandex_compute_instance_group" "webservers" {
     }
 
     network_interface {
-      nat        = false
+      # delete
+      nat        = var.nat_for_private
       network_id = yandex_vpc_network.fsd-network.id
       subnet_ids = [
         yandex_vpc_subnet.fsd-internal-subnet-a.id,

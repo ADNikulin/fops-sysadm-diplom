@@ -26,10 +26,10 @@
     mode: '0644'
 
 - name: ELASTICSEARCH - Run `docker-compose up`
-  community.docker.docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{ ansible_workdir }}/elastic-conf/"
-    pull: true
-    state: present
+    files: 
+      - docker-compose.yml
   register: compose
 
 - name: ELASTICSEARCH - Output of docker compose

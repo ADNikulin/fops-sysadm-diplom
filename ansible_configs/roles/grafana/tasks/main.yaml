@@ -27,10 +27,10 @@
     - { src: docker-compose.yml.j2, dest: "{{ ansible_workdir }}/grafana/docker-compose.yml"}
 
 - name: GRAFANA - Run `docker-compose up`
-  community.docker.docker_compose:
+  community.docker.docker_compose_v2:
     project_src: "{{ ansible_workdir }}/grafana/"
-    pull: true
-    state: present
+    files:
+      - docker-compose.yml
   register: compose
 
 - name: GRAFANA - Output of compose Grafana service

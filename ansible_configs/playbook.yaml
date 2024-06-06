@@ -18,19 +18,25 @@
     - docker-host
 
 - name: Elasticsearch setup
-  hosts: elastic
+  hosts: elastic-host
   roles:
     - elasticsearch
+  vars_files:
+    - ./vars/vars.yml
 
 - name: Kibana setup
-  hosts: kibana
+  hosts: kibana-host
   roles:
     - kibana
+  vars_files:
+    - ./vars/vars.yml
 
 - name: Configure Nginx Log Exporter on webservers
   hosts: webservers
   roles:
     - nginx-log-exporter
+  vars_files:
+    - ./vars/vars.yml
 
 - name: Configure Node Exporter on each server
   hosts:
@@ -39,18 +45,24 @@
   serial: 7
   roles:
     - node-exporter
+  vars_files:
+    - ./vars/vars.yml
 
 - name: Prometheus setup
-  hosts: prometheus
+  hosts: prometheus-host
   roles:
     - pg-prom-adapter
     - alertmanager
     - prometheus
+  vars_files:
+    - ./vars/vars.yml
 
 - name: Grafana setup
-  hosts: grafana
+  hosts: grafana-host
   roles:
     - grafana
+  vars_files:
+    - ./vars/vars.yml
 
 - name: Configure filebeats for nginx
   hosts:
@@ -59,6 +71,8 @@
     - filebeat
   vars:
     mode: nginx
+  vars_files:
+    - ./vars/vars.yml
 
 - name: Configure filebeats for containers
   hosts:
@@ -67,3 +81,5 @@
     - filebeat
   vars:
     mode: docker
+  vars_files:
+    - ./vars/vars.yml
