@@ -22,21 +22,21 @@
   roles:
     - elasticsearch
   vars_files:
-    - ./vars/vars.yml
+    - ./vars/terraform_vars.yml
 
 - name: Kibana setup
   hosts: kibana-host
   roles:
     - kibana
   vars_files:
-    - ./vars/vars.yml
+    - ./vars/terraform_vars.yml
 
 - name: Configure Nginx Log Exporter on webservers
   hosts: webservers
   roles:
     - nginx-log-exporter
   vars_files:
-    - ./vars/vars.yml
+    - ./vars/terraform_vars.yml
 
 - name: Configure Node Exporter on each server
   hosts:
@@ -46,7 +46,7 @@
   roles:
     - node-exporter
   vars_files:
-    - ./vars/vars.yml
+    - ./vars/terraform_vars.yml
 
 - name: Prometheus setup
   hosts: prometheus-host
@@ -55,14 +55,14 @@
     - alertmanager
     - prometheus
   vars_files:
-    - ./vars/vars.yml
+    - ./vars/terraform_vars.yml
 
 - name: Grafana setup
   hosts: grafana-host
   roles:
     - grafana
   vars_files:
-    - ./vars/vars.yml
+    - ./vars/terraform_vars.yml
 
 - name: Configure filebeats for nginx
   hosts:
@@ -72,7 +72,7 @@
   vars:
     mode: nginx
   vars_files:
-    - ./vars/vars.yml
+    - ./vars/terraform_vars.yml
 
 - name: Configure filebeats for containers
   hosts:
@@ -82,4 +82,4 @@
   vars:
     mode: docker
   vars_files:
-    - ./vars/vars.yml
+    - ./vars/terraform_vars.yml

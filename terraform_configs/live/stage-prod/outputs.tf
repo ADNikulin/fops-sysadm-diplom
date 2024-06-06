@@ -44,7 +44,7 @@ resource "local_file" "tf_ansible_vars_file" {
     pg_cluster_id: ${yandex_mdb_postgresql_cluster.postgres.id}
     pg_admin_password: ${var.pg_admin_password}
     DOC
-  filename = "../ansible/vars/terraform_vars.yml"
+  filename = "../../../ansible_configs/vars/terraform_vars.yml"
 }
 
 

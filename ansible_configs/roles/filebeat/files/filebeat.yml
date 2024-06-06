@@ -44,12 +44,14 @@ setup.template.settings:
 # Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
 # This requires a Kibana endpoint configuration.
 setup.kibana:
-  host: "http://kibana:5601"
+  # TODO: Add from terraforms
+  host: "http://172.16.17.27:5601"
 
 # ---------------------------- Elasticsearch Output ----------------------------
 output.elasticsearch:
   # Array of hosts to connect to.
-  hosts: ["http://elastic:9200"]
+  # TODO: Add from terraforms
+  hosts: ["http://172.16.18.20:9200"]
 #   index: "%{[agent.name]}-%{[agent.version]}-%{+yyyy.MM.dd}"
 
 # ================================= Processors =================================

@@ -10,7 +10,7 @@
   ansible.builtin.file:
     path: '{{ item.path }}'
     state: directory
-    owner: ansible
+    owner: user
     group: docker
     mode: '0755'
   loop:
