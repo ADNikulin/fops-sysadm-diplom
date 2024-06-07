@@ -4,8 +4,8 @@
     deb: "https://mirror.yandex.ru/mirrors/elastic/8/pool/main/f/filebeat/filebeat-8.1.1-amd64.deb"
 
 - name: Copy config file
-  ansible.builtin.copy:
-    src: filebeat.yml
+  ansible.builtin.template:
+    src: filebeat.yml.j2
     dest: /etc/filebeat/filebeat.yml
 
 - name: Set shipper name

@@ -1,63 +1,65 @@
-###################### Filebeat Configuration #########################
+# OLD_VERSIONS. this file has been moved to templates
 
-# ================================== General ===================================
+# ###################### Filebeat Configuration #########################
 
-# Shipper Name
-name:
+# # ================================== General ===================================
 
-#==========================  Modules configuration =============================
+# # Shipper Name
+# name:
 
-# NGINX module
-filebeat.modules:
+# #==========================  Modules configuration =============================
 
-
-# ============================== Filebeat inputs ===============================
-
+# # NGINX module
+# filebeat.modules:
 
 
-# Container inputs
-filebeat.inputs:
+# # ============================== Filebeat inputs ===============================
 
 
-# ============================== Filebeat modules ==============================
 
-filebeat.config.modules:
-  # Glob pattern for configuration loading
-  path: ${path.config}/modules.d/*.yml
+# # Container inputs
+# filebeat.inputs:
 
-  # Set to true to enable config reloading
-  reload.enabled: false
 
-  # Period on which files under path should be checked for changes
-  #reload.period: 10s
+# # ============================== Filebeat modules ==============================
 
-# ======================= Elasticsearch template setting =======================
-# setup.template.name: "filebeat"
-# setup.template.pattern: "filebeat"
-setup.template.settings:
-  index.number_of_shards: 1
-  #index.codec: best_compression
-  #_source.enabled: false
+# filebeat.config.modules:
+#   # Glob pattern for configuration loading
+#   path: ${path.config}/modules.d/*.yml
 
-# =================================== Kibana ===================================
+#   # Set to true to enable config reloading
+#   reload.enabled: false
 
-# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
-# This requires a Kibana endpoint configuration.
-setup.kibana:
-  # TODO: Add from terraforms
-  host: "http://172.16.17.27:5601"
+#   # Period on which files under path should be checked for changes
+#   #reload.period: 10s
 
-# ---------------------------- Elasticsearch Output ----------------------------
-output.elasticsearch:
-  # Array of hosts to connect to.
-  # TODO: Add from terraforms
-  hosts: ["http://172.16.18.20:9200"]
-#   index: "%{[agent.name]}-%{[agent.version]}-%{+yyyy.MM.dd}"
+# # ======================= Elasticsearch template setting =======================
+# # setup.template.name: "filebeat"
+# # setup.template.pattern: "filebeat"
+# setup.template.settings:
+#   index.number_of_shards: 1
+#   #index.codec: best_compression
+#   #_source.enabled: false
 
-# ================================= Processors =================================
-processors:
-  - add_host_metadata:
-      when.not.contains.tags: forwarded
-  - add_cloud_metadata: ~
-  - add_docker_metadata: ~
-  - add_kubernetes_metadata: ~
+# # =================================== Kibana ===================================
+
+# # Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
+# # This requires a Kibana endpoint configuration.
+# setup.kibana:
+#   # TODO: Add from terraforms
+#   host: "http://172.16.17.27:5601"
+
+# # ---------------------------- Elasticsearch Output ----------------------------
+# output.elasticsearch:
+#   # Array of hosts to connect to.
+#   # TODO: Add from terraforms
+#   hosts: ["http://172.16.18.20:9200"]
+# #   index: "%{[agent.name]}-%{[agent.version]}-%{+yyyy.MM.dd}"
+
+# # ================================= Processors =================================
+# processors:
+#   - add_host_metadata:
+#       when.not.contains.tags: forwarded
+#   - add_cloud_metadata: ~
+#   - add_docker_metadata: ~
+#   - add_kubernetes_metadata: ~

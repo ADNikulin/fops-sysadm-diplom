@@ -11,12 +11,12 @@
     - { path: "{{ ansible_workdir }}/grafana/" }
 
 - name: GRAFANA - Copy yaml configs to target
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: '{{ item.src }}'
     dest: '{{ item.dest }}'
     mode: '0644'
   loop:
-    - { src: datasources.yml, dest: "{{ ansible_workdir }}/grafana/datasources.yml"}
+    - { src: datasources.yml.j2, dest: "{{ ansible_workdir }}/grafana/datasources.yml"}
 
 - name: GRAFANA - Make docker-compose
   ansible.builtin.template:

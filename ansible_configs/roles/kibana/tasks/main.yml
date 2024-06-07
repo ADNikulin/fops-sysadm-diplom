@@ -10,9 +10,9 @@
   loop:
     - { path: "{{ ansible_workdir }}/kibana" }
 
-- name: Copy docker-compose yaml to target
-  ansible.builtin.copy:
-    src: "docker-compose.yml"
+- name: Build and Copy docker-compose yaml to target
+  ansible.builtin.template:
+    src: "docker-compose.yml.j2"
     dest: "{{ ansible_workdir }}/kibana/docker-compose.yml"
     mode: '0644'
 

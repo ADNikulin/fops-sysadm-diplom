@@ -7,3 +7,7 @@ telegram_bot_token: ""
 telegram_chat_id: ""
 pg_cluster_id: c9qaml4ahhqhijed211p
 pg_admin_password: Pg3TestPas1
+kibana_host: "172.16.17.27"
+grafana_host: "172.16.17.9"
+elastic_host: "172.16.18.20"
+prometheus_host: "172.16.18.23"

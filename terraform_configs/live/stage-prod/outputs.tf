@@ -39,10 +39,14 @@ resource "local_file" "tf_ansible_vars_file" {
     webserver_node_3: ${yandex_compute_instance_group.webservers.instances.2.name}
     kibana_password: ${var.kibana_password}
     ansible_workdir: ${var.ansible_workdir}
-    telegram_bot_token: ${var.telegram_bot_token}
+    telegram_bot_token: "${var.telegram_bot_token}"
     telegram_chat_id: "${var.telegram_chat_id}"
     pg_cluster_id: ${yandex_mdb_postgresql_cluster.postgres.id}
     pg_admin_password: ${var.pg_admin_password}
+    kibana_host: "${yandex_compute_instance.kibana.network_interface.0.ip_address}"
+    grafana_host: "${yandex_compute_instance.grafana.network_interface.0.ip_address}"
+    elastic_host: "${yandex_compute_instance.elastic.network_interface.0.ip_address}"
+    prometheus_host: "${yandex_compute_instance.prometheus.network_interface.0.ip_address}"
     DOC
   filename = "../../../ansible_configs/vars/terraform_vars.yml"
 }

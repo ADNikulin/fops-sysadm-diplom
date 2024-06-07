@@ -3,7 +3,7 @@ all:
     jump:
       hosts:
         bastion-host:
-          ansible_host: 51.250.104.247
+          ansible_host: 130.193.40.18
       vars:
         ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
         ansible_host_key_checking: false
@@ -28,7 +28,7 @@ all:
         kibana-host:
           ansible_host: 172.16.17.27
   vars:
-    ansible_ssh_common_args: '-J user@51.250.104.247 -o StrictHostKeyChecking=no'
+    ansible_ssh_common_args: '-J user@130.193.40.18 -o StrictHostKeyChecking=no'
     ansible_host_key_checking: false
     ansible_user: user
     ansible_become: true
