@@ -67,3 +67,8 @@ export YC_FOLDER_ID=$(yc config get folder-id)
 
 Далее плейбук подставляет уже эти файлы и инфру и поднимает оставшиеся сервисы. 
 В общем то и всё. 
+
+На текущий момент: 
+* вебсервисы - [http://158.160.158.186/](http://158.160.158.186/) (Можно увидеть на главной, как берется имя хоста в зависимости от машины (3 штуки))
+* кибана - [http://51.250.105.219:5601](http://51.250.105.219:5601/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&_a=(columns:!(),filters:!(),index:'filebeat-*',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc)))).
+* графана [http://84.201.160.210:3000](http://84.201.160.210:3000/d/rYdddlPWk/node-exporter-full?orgId=1&refresh=1m)
