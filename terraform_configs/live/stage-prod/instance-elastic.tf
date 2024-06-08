@@ -10,7 +10,7 @@ resource "yandex_compute_instance" "elastic" {
   resources {
     cores         = 2
     memory        = 4
-    core_fraction = 50
+    core_fraction = 20
   }
 
   scheduling_policy {

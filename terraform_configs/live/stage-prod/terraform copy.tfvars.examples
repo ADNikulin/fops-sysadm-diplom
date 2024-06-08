@@ -1,0 +1,12 @@
+# Список предзаполненых переменных
+
+path_to_metadata_user_ssh = "~/metadata/user.meta.yaml"
+service_account_id = "ajeshhq3lu6nad79d1q0"
+preemptible = false
+ansible_workdir = "/home/user"
+kibana_password = "TeSt123!"
+telegram_bot_token = ""
+telegram_chat_id = ""
+pg_admin_password = "Pg3TestPas1"
+# changes after configure settings
+nat_for_private = false
