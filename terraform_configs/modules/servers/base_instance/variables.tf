@@ -10,6 +10,18 @@ variable "server-app-name" {
   type        = string
 }
 
+variable "server-app-description" {
+  description = "Name VM in controll web"
+  type        = string
+  default     = ""
+}
+
+variable "server-os_family" {
+  description = "Name VM in controll web"
+  type        = string
+  default     = "ubuntu-2204-lts"
+}
+
 variable "server-host-name" {
   description = "VM machine name"
   type        = string
@@ -20,10 +32,22 @@ variable "server-zone-location" {
   type        = string
 }
 
-variable "core_fraction" {
+variable "server-core_fraction" {
   description = "Доля процессорного времени"
   type        = number
   default     = 20
+}
+
+variable "server-core_numbers" {
+  description = "Доля процессорного времени"
+  type        = number
+  default     = 2
+}
+
+variable "server-memory" {
+  description = "Доля процессорного времени"
+  type        = number
+  default     = 2
 }
 
 variable "servers_subnet_id" {
@@ -34,14 +58,44 @@ variable "servers_subnet_id" {
 variable "ipv4_internal" {
   description = "ipv4_internal"
   type        = string
+  nullable    = true
 }
 
-variable "sg_group_id" {
+variable "sg_group_ids" {
   description = "servers_security_internal_group_id"
-  type        = string
+  type        = list(string)
+}
+
+variable "server-disk_type" {
+  description = "network-hdd or network-ssd"
+  type = string
+  default = "network-hdd"
+}
+
+variable "server-disk_memory" {
+  description = "server-disk_memory"
+  type = number
+  default = 10
+}
+
+variable "preemptible" {
+  default = true
+  description = "preemptible"
+  type = bool
+}
+
+variable "nat" {
+  default = false
+  description = "using public IP"
+  type = bool
 }
 
 variable "path_to_metadata_user_ssh" {
   description = "Path to Users Metadata access by ssh"
   type        = string
+}
+
+variable "service_account_id" {
+  type = string
+  description = "service_account_id"
 }

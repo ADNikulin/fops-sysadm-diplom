@@ -3,32 +3,32 @@ all:
     jump:
       hosts:
         bastion-host:
-          ansible_host: 84.201.178.245
+          ansible_host: 158.160.22.165
       vars:
         ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
         ansible_host_key_checking: false
 
     webservers:
       hosts:
-        nginx-yhyv-webserver-host:
-          ansible_host: 172.16.15.25
-        nginx-awew-webserver-host:
-          ansible_host: 172.16.16.21
-        nginx-ujub-webserver-host:
-          ansible_host: 172.16.20.9
+        nginx-ajin-webserver-host:
+          ansible_host: nginx-ajin-webserver-host.ru-central1.internal
+        nginx-aqyq-webserver-host:
+          ansible_host: nginx-aqyq-webserver-host.ru-central1.internal
+        nginx-inid-webserver-host:
+          ansible_host: nginx-inid-webserver-host.ru-central1.internal
 
     observability:
       hosts:
         prometheus-host:
-          ansible_host: 172.16.18.7
+          ansible_host: prometheus-host.ru-central1.internal
         grafana-host:
-          ansible_host: 172.16.17.8
+          ansible_host: grafana-host.ru-central1.internal
         elastic-host:
-          ansible_host: 172.16.18.26
+          ansible_host: elastic-host.ru-central1.internal
         kibana-host:
-          ansible_host: 172.16.17.32
+          ansible_host: kibana-host.ru-central1.internal
   vars:
-    ansible_ssh_common_args: '-J user@84.201.178.245 -o StrictHostKeyChecking=no'
+    ansible_ssh_common_args: '-J user@158.160.22.165 -o StrictHostKeyChecking=no'
     ansible_host_key_checking: false
     ansible_user: user
     ansible_become: true

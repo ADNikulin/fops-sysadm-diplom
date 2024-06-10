@@ -33,3 +33,5 @@ override.tf.json
 .terraformrc
 terraform.rc
 ansible_configs/files/
+ansible_configs/.ansible_vault_pass
+ansible_configs/ansible.cfg

@@ -12,33 +12,39 @@ provider "yandex" {
   zone = var.zone
 }
 
+data "yandex_compute_image" "base" {
+  family = var.server-os_family
+}
+
 resource "yandex_compute_instance" "instance" {
   name        = var.server-app-name
   hostname    = var.server-host-name
   zone        = var.server-zone-location
   platform_id = "standard-v3"
+  description = var.server-app-description
 
   resources {
-    cores         = 2
-    core_fraction = var.core_fraction
-    memory        = 2
+    cores         = var.server-core_numbers
+    core_fraction = var.server-core_fraction
+    memory        = var.server-memory
   }
 
   boot_disk {
     initialize_params {
-      image_id = "fd8ecgtorub9r4609man"
-      size     = 10
+      image_id = data.yandex_compute_image.base.image_id
+      size     = var.server-disk_memory
+      type     = var.server-disk_type
     }
   }
 
   scheduling_policy {
-    preemptible = true
+    preemptible = var.preemptible
   }
 
   network_interface {
     subnet_id          = var.servers_subnet_id
-    nat                = false
-    security_group_ids = [var.sg_group_id]
+    nat                = var.nat
+    security_group_ids = var.sg_group_ids
     ipv4               = true
     ip_address         = var.ipv4_internal
   }

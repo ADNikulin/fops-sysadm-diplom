@@ -56,6 +56,7 @@
     - prometheus
   vars_files:
     - ./vars/terraform_vars.yml
+    - ./vars/secrets_vars.yml
 
 - name: Grafana setup
   hosts: grafana-host
